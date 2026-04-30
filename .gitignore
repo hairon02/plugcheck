@@ -1,0 +1,8 @@
+.agents/
+node_modules/
+.next/
+.turbo/
+CLAUDE.md
+plugcheck-blueprint.md
+.claude/
+frontend/node_modules/
