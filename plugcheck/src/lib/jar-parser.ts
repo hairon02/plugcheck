@@ -13,6 +13,8 @@ async function parseYaml(content: string): Promise<Record<string, unknown>> {
     : {}
 }
 
+const FABRIC_INFRASTRUCTURE_DEPS = new Set(['fabricloader', 'minecraft', 'java'])
+
 export async function parseJarFiles(files: File[]): Promise<PluginInput[]> {
   return Promise.all(files.map(parseJar))
 }
@@ -20,6 +22,7 @@ export async function parseJarFiles(files: File[]): Promise<PluginInput[]> {
 async function parseJar(file: File): Promise<PluginInput> {
   const zip = await JSZip.loadAsync(file)
 
+  // --- Paper / Spigot ---
   const pluginYml = zip.file('plugin.yml')
   if (pluginYml) {
     const content = await pluginYml.async('string')
@@ -35,7 +38,42 @@ async function parseJar(file: File): Promise<PluginInput> {
     }
   }
 
-  // Fabric and Forge handled in Task 7
+  // --- Fabric ---
+  const fabricMod = zip.file('fabric.mod.json')
+  if (fabricMod) {
+    const content = await fabricMod.async('string')
+    const data = JSON.parse(content) as Record<string, unknown>
+    const depends =
+      data['depends'] && typeof data['depends'] === 'object'
+        ? Object.keys(data['depends'] as Record<string, unknown>).filter(
+            (k) => !FABRIC_INFRASTRUCTURE_DEPS.has(k)
+          )
+        : []
+    return {
+      name: typeof data['id'] === 'string' ? data['id'] : fileBaseName(file),
+      version: typeof data['version'] === 'string' ? data['version'] : null,
+      type: 'mod',
+      dependencies: depends,
+      source: 'jar',
+    }
+  }
+
+  // --- Forge ---
+  const modsToml = zip.file('META-INF/mods.toml')
+  if (modsToml) {
+    const content = await modsToml.async('string')
+    const modIdMatch = content.match(/modId\s*=\s*"([^"]+)"/)
+    const versionMatch = content.match(/\bversion\s*=\s*"([^"]+)"/)
+    return {
+      name: modIdMatch?.[1] ?? fileBaseName(file),
+      version: versionMatch?.[1] ?? null,
+      type: 'mod',
+      dependencies: [],
+      source: 'jar',
+    }
+  }
+
+  // --- Unknown format ---
   return {
     name: fileBaseName(file),
     version: null,
