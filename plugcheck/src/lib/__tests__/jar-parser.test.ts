@@ -10,7 +10,7 @@ async function createMockJar(
   for (const [filePath, content] of Object.entries(files)) {
     zip.file(filePath, content)
   }
-  const bytes = await zip.generateAsync({ type: 'uint8array' })
+  const bytes = await zip.generateAsync({ type: 'arraybuffer' })
   return new File([bytes], jarName, { type: 'application/java-archive' })
 }
 
