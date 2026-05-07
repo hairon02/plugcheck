@@ -58,15 +58,15 @@ describe('resolvePlugin', () => {
   it('falls back to Modrinth when Hangar and Spiget both return null', async () => {
     vi.mocked(hangar.searchHangar).mockResolvedValue(null)
     vi.mocked(spiget.searchSpiget).mockResolvedValue(null)
-    vi.mocked(modrinth.searchProject).mockResolvedValue({ ...MOCK_RESULT, source: 'modrinth' })
+    vi.mocked(modrinth.searchModrinth).mockResolvedValue({ ...MOCK_RESULT, source: 'modrinth' })
     const result = await resolvePlugin(INPUT, '1.21.4', 'paper')
     expect(result.source).toBe('modrinth')
   })
 
   it('tries Modrinth first for Fabric platform', async () => {
-    vi.mocked(modrinth.searchProject).mockResolvedValue({ ...MOCK_RESULT, source: 'modrinth' })
+    vi.mocked(modrinth.searchModrinth).mockResolvedValue({ ...MOCK_RESULT, source: 'modrinth' })
     const result = await resolvePlugin({ ...INPUT, type: 'mod' }, '1.21.4', 'fabric')
-    expect(modrinth.searchProject).toHaveBeenCalledOnce()
+    expect(modrinth.searchModrinth).toHaveBeenCalledOnce()
     expect(hangar.searchHangar).not.toHaveBeenCalled()
     expect(result.source).toBe('modrinth')
   })
@@ -74,7 +74,7 @@ describe('resolvePlugin', () => {
   it('returns status unknown when all sources return null', async () => {
     vi.mocked(hangar.searchHangar).mockResolvedValue(null)
     vi.mocked(spiget.searchSpiget).mockResolvedValue(null)
-    vi.mocked(modrinth.searchProject).mockResolvedValue(null)
+    vi.mocked(modrinth.searchModrinth).mockResolvedValue(null)
     const result = await resolvePlugin(INPUT, '1.21.4', 'paper')
     expect(result.status).toBe('unknown')
     expect(result.name).toBe('EssentialsX')

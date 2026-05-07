@@ -1,5 +1,5 @@
 import type { PluginInput, PluginResult, Platform } from '@/types'
-import { searchProject } from './modrinth'
+import { searchModrinth } from './modrinth'
 import { searchHangar } from './hangar'
 import { searchSpiget } from './spiget'
 import { checkGitHubAbandonment } from './github'
@@ -22,7 +22,7 @@ const API_HANDLERS: Record<
 > = {
   hangar:   searchHangar,
   spiget:   searchSpiget,
-  modrinth: searchProject,
+  modrinth: searchModrinth,
 }
 
 export async function resolvePlugin(
