@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: 'PlugCheck — Verify Minecraft Plugin Compatibility',
     description:
       'Check plugin compatibility, detect conflicts, and find alternatives. No login required.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
