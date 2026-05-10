@@ -7,12 +7,13 @@ import { DropZone } from './DropZone'
 import { PluginNameInput } from './PluginNameInput'
 import { CheckButton } from './CheckButton'
 import { ResultsPanel } from '@/components/results/ResultsPanel'
+import versions from '@/data/mc-versions.json'
 
 // CheckerSection is the single "use client" boundary for the entire tool.
 // All interactive state lives here — child components receive only what they need.
 export function CheckerSection() {
   const [platform, setPlatform] = useState<Platform>('paper')
-  const [mcVersion, setMcVersion] = useState('1.21.4')
+  const [mcVersion, setMcVersion] = useState(versions[0])
   const [jarPlugins, setJarPlugins] = useState<PluginInput[]>([])
   const [manualPlugins, setManualPlugins] = useState<PluginInput[]>([])
   const [results, setResults] = useState<CheckResponse | null>(null)
