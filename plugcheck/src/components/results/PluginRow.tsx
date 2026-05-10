@@ -8,7 +8,7 @@ interface PluginRowProps {
 
 export function PluginRow({ result, isAlternate }: PluginRowProps) {
   return (
-    <tr style={{ backgroundColor: isAlternate ? 'var(--color-muted)' : 'var(--color-surface)' }}>
+    <tr style={{ backgroundColor: isAlternate ? 'var(--color-muted)' : 'var(--color-card)' }}>
       <td className="px-4 py-3">
         <div className="flex flex-col gap-0.5">
           <span className="font-mono text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
@@ -28,7 +28,7 @@ export function PluginRow({ result, isAlternate }: PluginRowProps) {
         </div>
       </td>
       <td className="px-4 py-3">
-        <span className="font-mono text-xs" style={{ color: 'var(--color-muted-fg)' }}>
+        <span className="font-mono text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
           {result.latestVersion ?? '—'}
         </span>
       </td>
@@ -47,7 +47,7 @@ export function PluginRow({ result, isAlternate }: PluginRowProps) {
             View →
           </a>
         ) : (
-          <span className="text-xs" style={{ color: 'var(--color-muted-fg)' }}>—</span>
+          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>—</span>
         )}
       </td>
     </tr>

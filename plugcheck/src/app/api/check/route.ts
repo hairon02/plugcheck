@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Ratelimit } from '@upstash/ratelimit'
-import { Redis } from '@upstash/redis'
 import { resolvePlugin } from '@/lib/aggregator'
 import { detectConflicts } from '@/lib/conflict-detector'
-import { getCached, setCached, buildCacheKey } from '@/lib/cache'
+import { getCached, setCached, buildCacheKey, redis } from '@/lib/cache'
 import type { PluginResult, CheckResponse, Platform } from '@/types'
 
 export const runtime = 'nodejs'
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-})
 
 // 10 requests per IP per minute — prevents abuse without blocking legitimate users
 const ratelimit = new Ratelimit({
@@ -25,13 +19,13 @@ const PluginInputSchema = z.object({
   name: z.string().min(1).max(100),
   version: z.string().nullable(),
   type: z.enum(['plugin', 'mod']),
-  dependencies: z.array(z.string()),
+  dependencies: z.array(z.string().max(200)).max(50),
   source: z.enum(['jar', 'manual']),
 })
 
 const CheckRequestSchema = z.object({
   plugins: z.array(PluginInputSchema).min(1).max(100),
-  mcVersion: z.string().min(1),
+  mcVersion: z.string().min(1).max(20),
   platform: z.enum(['paper', 'spigot', 'fabric', 'forge', 'purpur']),
 })
 
@@ -40,7 +34,10 @@ function errorJson(error: string, message: string, status: number) {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous'
+  const ip =
+    req.headers.get('x-real-ip')?.trim() ??
+    req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
+    'anonymous'
   const { success } = await ratelimit.limit(ip)
   if (!success) {
     return errorJson('RATE_LIMITED', 'Too many requests. Please wait a minute.', 429)

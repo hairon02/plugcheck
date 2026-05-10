@@ -61,7 +61,7 @@ export function CheckerSection() {
     <div className="mx-auto w-full max-w-3xl">
       <div
         className="rounded-2xl p-6 shadow-sm"
-        style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
+        style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card)' }}
       >
         <div className="space-y-4">
           <PlatformTabs value={platform} onChange={setPlatform} />
@@ -70,7 +70,7 @@ export function CheckerSection() {
 
           <div className="flex items-center gap-3">
             <div className="flex-1" style={{ borderTop: '1px solid var(--color-border)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-fg)' }}>or type names</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>or type names</span>
             <div className="flex-1" style={{ borderTop: '1px solid var(--color-border)' }} />
           </div>
 
@@ -86,7 +86,7 @@ export function CheckerSection() {
           )}
 
           {allPlugins.length > 0 && (
-            <p className="text-xs" style={{ color: 'var(--color-muted-fg)' }}>
+            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {allPlugins.length} plugin{allPlugins.length !== 1 ? 's' : ''} ready to check
             </p>
           )}

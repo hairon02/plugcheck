@@ -15,7 +15,7 @@ export function ResultsTable({ results }: ResultsTableProps) {
               <th
                 key={col}
                 className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide"
-                style={{ color: 'var(--color-muted-fg)' }}
+                style={{ color: 'var(--color-muted-foreground)' }}
               >
                 {col}
               </th>

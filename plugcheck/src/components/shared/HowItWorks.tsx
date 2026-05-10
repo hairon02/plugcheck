@@ -40,7 +40,7 @@ export function HowItWorks() {
             <h3 className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
               {step.title}
             </h3>
-            <p className="text-xs leading-relaxed" style={{ color: 'var(--color-muted-fg)' }}>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
               {step.description}
             </p>
           </div>

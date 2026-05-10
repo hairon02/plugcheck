@@ -17,6 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'https://plugcheck.dev'),
   title: 'PlugCheck — Verify Minecraft Plugin Compatibility',
   description:
     'Upload your .jar files or paste your plugin list. Find out in seconds which plugins are compatible with your target Minecraft version.',

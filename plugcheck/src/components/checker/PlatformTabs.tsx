@@ -23,11 +23,12 @@ export function PlatformTabs({ value, onChange }: PlatformTabsProps) {
         return (
           <button
             key={tab.value}
+            type="button"
             onClick={() => onChange(tab.value)}
             className="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150 ease-out"
             style={{
-              backgroundColor: isActive ? 'var(--color-surface)' : 'transparent',
-              color: isActive ? 'var(--color-foreground)' : 'var(--color-muted-fg)',
+              backgroundColor: isActive ? 'var(--color-card)' : 'transparent',
+              color: isActive ? 'var(--color-foreground)' : 'var(--color-muted-foreground)',
               boxShadow: isActive ? '0 1px 2px 0 rgb(0 0 0 / 0.05)' : 'none',
             }}
           >

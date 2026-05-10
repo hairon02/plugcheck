@@ -20,7 +20,7 @@ export async function checkGitHubAbandonment(repoUrl: string): Promise<boolean> 
 
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
-    "User-Agent": "PlugCheck/1.0 (haironl072@gmail.com)",
+    "User-Agent": "PlugCheck/1.0",
   };
   if (process.env.GITHUB_TOKEN) {
     headers["Authorization"] = `Bearer ${process.env.GITHUB_TOKEN}`;

@@ -18,7 +18,7 @@ export function SummaryBar({ summary }: SummaryBarProps) {
         <div
           key={key}
           className="rounded-lg p-3 text-center shadow-sm"
-          style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
+          style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card)' }}
         >
           <div className="text-2xl font-bold" style={{ color: 'var(--color-foreground)' }}>
             {summary[key]}

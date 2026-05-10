@@ -6,20 +6,24 @@ function fileBaseName(file: File): string {
 }
 
 async function parseYaml(content: string): Promise<Record<string, unknown>> {
-  const { load } = await import('js-yaml')
-  const parsed = load(content)
+  const { load, FAILSAFE_SCHEMA } = await import('js-yaml')
+  const parsed = load(content, { schema: FAILSAFE_SCHEMA })
   return typeof parsed === 'object' && parsed !== null
     ? (parsed as Record<string, unknown>)
     : {}
 }
 
 const FABRIC_INFRASTRUCTURE_DEPS = new Set(['fabricloader', 'minecraft', 'java'])
+const MAX_JAR_BYTES = 50 * 1024 * 1024
 
 export async function parseJarFiles(files: File[]): Promise<PluginInput[]> {
   return Promise.all(files.map(parseJar))
 }
 
 async function parseJar(file: File): Promise<PluginInput> {
+  if (file.size > MAX_JAR_BYTES) {
+    return { name: fileBaseName(file), version: null, type: 'plugin', dependencies: [], source: 'jar' }
+  }
   const zip = await JSZip.loadAsync(file)
 
   // --- Paper / Spigot ---

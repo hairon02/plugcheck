@@ -38,11 +38,11 @@ export function ExportButton({ data }: ExportButtonProps) {
       className="rounded-lg px-4 py-2 text-sm font-medium transition-all duration-150 ease-out"
       style={{
         border: '1px solid var(--color-border)',
-        backgroundColor: 'var(--color-surface)',
+        backgroundColor: 'var(--color-card)',
         color: 'var(--color-foreground)',
       }}
       onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-muted)')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-surface)')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-card)')}
     >
       Export CSV
     </button>

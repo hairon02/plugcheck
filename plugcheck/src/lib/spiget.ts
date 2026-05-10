@@ -2,7 +2,7 @@ import { getCached, setCached } from "@/lib/cache";
 import type { Platform, PluginResult } from "@/types/index";
 
 const SPIGET_BASE = "https://api.spiget.org/v2";
-const HEADERS = { "User-Agent": "PlugCheck/1.0 (haironl072@gmail.com)" };
+const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
 const SEARCH_TTL = 6 * 60 * 60;
 const ABANDONMENT_SECONDS = 18 * 30 * 24 * 60 * 60;
 const SUPPORTED_PLATFORMS = new Set<Platform>(["paper", "spigot", "purpur"]);

@@ -2,7 +2,7 @@ import { getCached, setCached } from "@/lib/cache";
 import type { Platform, PluginResult } from "@/types/index";
 
 const HANGAR_BASE = "https://hangar.papermc.io/api/v1";
-const HEADERS = { "User-Agent": "PlugCheck/1.0 (haironl072@gmail.com)" };
+const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
 const SEARCH_TTL = 6 * 60 * 60;
 
 const PLATFORM_MAP: Partial<Record<Platform, string>> = {
@@ -47,9 +47,8 @@ export async function searchHangar(
     if (!projects || projects.length === 0) return null;
 
     const project =
-      projects.find(
-        (p) => p.name.toLowerCase() === pluginName.toLowerCase(),
-      ) ?? projects[0];
+      projects.find((p) => p.name.toLowerCase() === pluginName.toLowerCase()) ??
+      projects[0];
 
     const { owner, slug } = project.namespace;
     const projectUrl = `https://hangar.papermc.io/${owner}/${slug}`;

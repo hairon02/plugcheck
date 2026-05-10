@@ -17,7 +17,7 @@ export default function HomePage() {
           </h1>
           <p
             className="mx-auto mt-4 max-w-xl text-base"
-            style={{ color: 'var(--color-muted-fg)' }}
+            style={{ color: 'var(--color-muted-foreground)' }}
           >
             Upload your .jar files or paste a plugin list. Get a full compatibility report in seconds — no login required.
           </p>

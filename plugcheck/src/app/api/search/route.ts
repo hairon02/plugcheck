@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Ratelimit } from '@upstash/ratelimit'
-import { Redis } from '@upstash/redis'
-import { getCached, setCached } from '@/lib/cache'
+import { getCached, setCached, redis } from '@/lib/cache'
 
 export const runtime = 'nodejs'
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-})
 
 // Autocomplete is more lenient — 30 req/min
 const ratelimit = new Ratelimit({
@@ -24,15 +18,21 @@ interface Suggestion {
 }
 
 export async function GET(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous'
+  const ip =
+    req.headers.get('x-real-ip')?.trim() ??
+    req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
+    'anonymous'
   const { success } = await ratelimit.limit(`search:${ip}`)
   if (!success) {
     return NextResponse.json({ error: 'RATE_LIMITED', message: 'Too many requests' }, { status: 429 })
   }
 
+  const VALID_PLATFORMS = new Set(['paper', 'spigot', 'fabric', 'forge', 'purpur'])
+
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q')?.trim() ?? ''
-  const platform = searchParams.get('platform') ?? 'paper'
+  const rawPlatform = searchParams.get('platform') ?? 'paper'
+  const platform = VALID_PLATFORMS.has(rawPlatform) ? rawPlatform : 'paper'
 
   if (q.length < 2) return NextResponse.json({ suggestions: [] })
 

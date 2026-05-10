@@ -68,7 +68,7 @@ export function PluginNameInput({ onPluginsChange, platform }: PluginNameInputPr
   return (
     <div className="relative flex flex-col gap-1.5">
       <label className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-        Plugin names <span style={{ color: 'var(--color-muted-fg)', fontWeight: 400 }}>(one per line)</span>
+        Plugin names <span style={{ color: 'var(--color-muted-foreground)', fontWeight: 400 }}>(one per line)</span>
       </label>
       <textarea
         value={text}
@@ -78,7 +78,7 @@ export function PluginNameInput({ onPluginsChange, platform }: PluginNameInputPr
         className="resize-none rounded-lg px-3 py-2 font-mono text-sm transition-all duration-150 ease-out focus:outline-none"
         style={{
           border: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-surface)',
+          backgroundColor: 'var(--color-card)',
           color: 'var(--color-foreground)',
         }}
         onFocus={(e) => (e.target.style.outline = `2px solid var(--color-ring)`)}
@@ -90,7 +90,7 @@ export function PluginNameInput({ onPluginsChange, platform }: PluginNameInputPr
       {suggestions.length > 0 && (
         <ul
           className="absolute top-full z-10 mt-1 w-full overflow-hidden rounded-lg shadow-sm"
-          style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
+          style={{ border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card)' }}
         >
           {suggestions.map((s) => (
             <li
@@ -102,7 +102,7 @@ export function PluginNameInput({ onPluginsChange, platform }: PluginNameInputPr
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
             >
               {s.name}
-              <span className="ml-2 text-xs" style={{ color: 'var(--color-muted-fg)' }}>
+              <span className="ml-2 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
                 {s.source}
               </span>
             </li>

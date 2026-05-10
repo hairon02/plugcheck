@@ -4,10 +4,10 @@ export function Footer() {
   return (
     <footer
       className="mt-16"
-      style={{ borderTop: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
+      style={{ borderTop: '1px solid var(--color-border)', backgroundColor: 'var(--color-card)' }}
     >
       <div className="mx-auto max-w-6xl px-4 py-8 text-center">
-        <p className="text-xs" style={{ color: 'var(--color-muted-fg)' }}>
+        <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
           Data from{' '}
           {[
             { label: 'Modrinth', href: 'https://modrinth.com' },
@@ -21,9 +21,9 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline transition-all duration-150 ease-out"
-                style={{ color: 'var(--color-muted-fg)' }}
+                style={{ color: 'var(--color-muted-foreground)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-fg)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-foreground)')}
               >
                 {label}
               </a>

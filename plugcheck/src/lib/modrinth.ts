@@ -3,7 +3,7 @@ import staticVersions from "@/data/mc-versions.json";
 import type { PluginResult } from "@/types";
 
 const MODRINTH_BASE = "https://api.modrinth.com/v2";
-const HEADERS = { "User-Agent": "PlugCheck/1.0 (haironl072@gmail.com)" };
+const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
 
 const MC_VERSIONS_CACHE_KEY = "plugcheck:v1:mc-versions";
 const SEARCH_TTL = 6 * 60 * 60;
@@ -81,34 +81,34 @@ export async function searchProject(
 }
 
 const PLATFORM_LOADERS: Record<string, string[]> = {
-  paper:  ['paper', 'bukkit', 'spigot'],
-  spigot: ['bukkit', 'spigot'],
-  purpur: ['purpur', 'paper', 'bukkit'],
-  fabric: ['fabric'],
-  forge:  ['forge'],
-}
+  paper: ["paper", "bukkit", "spigot"],
+  spigot: ["bukkit", "spigot"],
+  purpur: ["purpur", "paper", "bukkit"],
+  fabric: ["fabric"],
+  forge: ["forge"],
+};
 
 export async function searchModrinth(
   name: string,
   mcVersion: string,
   platform: string,
 ): Promise<PluginResult | null> {
-  const loaders = PLATFORM_LOADERS[platform] ?? ['paper', 'bukkit']
-  const hits = await searchProject(name, mcVersion, loaders)
-  if (!hits.length) return null
-  const hit = hits[0]
+  const loaders = PLATFORM_LOADERS[platform] ?? ["paper", "bukkit"];
+  const hits = await searchProject(name, mcVersion, loaders);
+  if (!hits.length) return null;
+  const hit = hits[0];
   return {
     name: hit.title,
-    status: hit.versions.includes(mcVersion) ? 'compatible' : 'incompatible',
+    status: hit.versions.includes(mcVersion) ? "compatible" : "incompatible",
     latestVersion: hit.versions[0] ?? null,
     supportedVersions: hit.versions,
     lastUpdate: hit.date_modified,
     isAbandoned: false,
-    source: 'modrinth',
+    source: "modrinth",
     url: `https://modrinth.com/project/${hit.slug}`,
     alternative: null,
     dependencies: [],
-  }
+  };
 }
 
 export async function getProject(

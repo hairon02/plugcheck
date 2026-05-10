@@ -18,7 +18,7 @@ export function VersionSelector({ value, onChange }: VersionSelectorProps) {
         className="rounded-lg px-3 py-2 text-sm transition-all duration-150 ease-out focus:outline-none"
         style={{
           border: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-surface)',
+          backgroundColor: 'var(--color-card)',
           color: 'var(--color-foreground)',
         }}
       >
