@@ -1,0 +1,52 @@
+[
+  {
+    "plugins": ["EssentialsX", "CMI"],
+    "severity": "error",
+    "reason": "Both provide /home, /spawn, /msg and economy — direct command conflict"
+  },
+  {
+    "plugins": ["WorldEdit", "FastAsyncWorldEdit"],
+    "severity": "warning",
+    "reason": "FAWE is a fork of WorldEdit — use one, not both"
+  },
+  {
+    "plugins": ["PlaceholderAPI", "MVdWPlaceholderAPI"],
+    "severity": "warning",
+    "reason": "Competing placeholder APIs — may conflict in some plugins"
+  },
+  {
+    "plugins": ["AuthMe", "nLogin"],
+    "severity": "error",
+    "reason": "Duplicate authentication systems — only one can manage logins"
+  },
+  {
+    "plugins": ["Multiverse-Core", "MyWorlds"],
+    "severity": "warning",
+    "reason": "Competing world management plugins — can cause world loading conflicts"
+  },
+  {
+    "plugins": ["WorldGuard", "GriefPrevention"],
+    "severity": "warning",
+    "reason": "Overlapping region protection — can cause permission conflicts"
+  },
+  {
+    "plugins": ["Vault", "EconomyAPI"],
+    "severity": "warning",
+    "reason": "Competing economy bridge APIs — plugins may pick different ones"
+  },
+  {
+    "plugins": ["ProtocolLib", "ProtocolSupport"],
+    "severity": "error",
+    "reason": "Both manipulate the Minecraft protocol — known incompatibility"
+  },
+  {
+    "plugins": ["EssentialsX", "CMI"],
+    "severity": "error",
+    "reason": "Duplicate player management features"
+  },
+  {
+    "plugins": ["LuckPerms", "GroupManager"],
+    "severity": "error",
+    "reason": "Duplicate permissions systems — only one should manage permissions"
+  }
+]
