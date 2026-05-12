@@ -19,7 +19,7 @@ export default function HomePage() {
             className="mx-auto mt-4 max-w-xl text-base"
             style={{ color: 'var(--color-muted-foreground)' }}
           >
-            Upload your .jar files or paste a plugin list. Get a full compatibility report in seconds — no login required.
+            Drop your .jar files or paste plugin names. You get a compatibility report in a few seconds.
           </p>
         </section>
 
