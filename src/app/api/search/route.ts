@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Ratelimit } from '@upstash/ratelimit'
-import { getCached, setCached, redis } from '@/lib/cache'
+import { getCached, setCached, isRedisConfigured, redis } from '@/lib/cache'
 
 export const runtime = 'nodejs'
 
 // Autocomplete is more lenient — 30 req/min
-const ratelimit = new Ratelimit({
+const ratelimit = isRedisConfigured ? new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(30, '1 m'),
   analytics: false,
-})
+}) : null
 
 interface Suggestion {
   name: string
@@ -22,9 +22,11 @@ export async function GET(req: NextRequest) {
     req.headers.get('x-real-ip')?.trim() ??
     req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
     'anonymous'
-  const { success } = await ratelimit.limit(`search:${ip}`)
-  if (!success) {
-    return NextResponse.json({ error: 'RATE_LIMITED', message: 'Too many requests' }, { status: 429 })
+  if (ratelimit) {
+    const { success } = await ratelimit.limit(`search:${ip}`)
+    if (!success) {
+      return NextResponse.json({ error: 'RATE_LIMITED', message: 'Too many requests' }, { status: 429 })
+    }
   }
 
   const VALID_PLATFORMS = new Set(['paper', 'spigot', 'fabric', 'forge', 'purpur'])

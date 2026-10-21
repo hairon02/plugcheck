@@ -5,7 +5,7 @@ vi.mock('@/lib/cache', () => ({
   setCached: vi.fn().mockResolvedValue(undefined),
 }))
 
-import { getMCVersions, searchProject, getProject } from '../modrinth'
+import { getMCVersions, searchProject, getProject, searchModrinth } from '../modrinth'
 import { getCached, setCached } from '@/lib/cache'
 
 const mockGameVersions = [
@@ -173,5 +173,34 @@ describe('getProject', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
     const project = await getProject('aaaabbbb')
     expect(project).toBeNull()
+  })
+})
+
+describe('searchModrinth identity matching', () => {
+  beforeEach(() => {
+    vi.mocked(getCached).mockResolvedValue(null)
+  })
+
+  it('matches a descriptive title when its slug exactly identifies the plugin', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        hits: [{ ...mockSearchHit, title: 'EcoArmor Create Custom Armor Upgrades', slug: 'ecoarmor' }],
+      }),
+    }))
+
+    const result = await searchModrinth('EcoArmor', '1.21.4', 'paper')
+    expect(result?.name).toBe('EcoArmor')
+    expect(result?.url).toContain('/ecoarmor')
+  })
+
+  it('rejects a fuzzy result with a different project identity', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ hits: [{ ...mockSearchHit, title: 'EcoArmor Plus', slug: 'ecoarmor-plus' }] }),
+    }))
+
+    const result = await searchModrinth('EcoArmor', '1.21.4', 'paper')
+    expect(result).toBeNull()
   })
 })

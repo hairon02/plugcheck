@@ -1,5 +1,6 @@
 import { getCached, setCached } from "@/lib/cache";
 import type { Platform, PluginResult } from "@/types/index";
+import { isExactProjectMatch } from "./name-matching";
 
 const SPIGET_BASE = "https://api.spiget.org/v2";
 const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
@@ -24,7 +25,7 @@ export async function searchSpiget(
 ): Promise<PluginResult | null> {
   if (!SUPPORTED_PLATFORMS.has(platform)) return null;
 
-  const cacheKey = `plugcheck:v1:spiget:${name.toLowerCase()}:${mcVersion}:${platform}`;
+  const cacheKey = `plugcheck:v2:spiget:${name.toLowerCase()}:${mcVersion}:${platform}`;
   const cached = await getCached<PluginResult>(cacheKey);
   if (cached) return cached;
 
@@ -38,9 +39,8 @@ export async function searchSpiget(
     const resources: SpigetResource[] = await searchRes.json();
     if (!resources || resources.length === 0) return null;
 
-    const resource =
-      resources.find((r) => r.name.toLowerCase() === name.toLowerCase()) ??
-      resources[0];
+    const resource = resources.find((r) => isExactProjectMatch(name, r.name));
+    if (!resource) return null;
 
     const versionRes = await fetch(
       `${SPIGET_BASE}/resources/${resource.id}/versions/latest`,
@@ -59,7 +59,7 @@ export async function searchSpiget(
       : false;
 
     const result: PluginResult = {
-      name: resource.name,
+      name,
       status: isAbandoned ? "abandoned" : "compatible",
       latestVersion: versionData?.name ?? null,
       supportedVersions: [],

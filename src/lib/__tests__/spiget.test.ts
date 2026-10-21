@@ -89,20 +89,17 @@ describe('searchSpiget', () => {
     expect(result!.url).toBe('https://www.spigotmc.org/resources/12345/')
   })
 
-  it('falls back to first result if no exact match', async () => {
+  it('rejects partial matches instead of identifying another resource', async () => {
     const firstResource = { id: 11111, name: 'EssentialsXtra', updateDate: NOW_SECONDS }
     vi.stubGlobal('fetch', vi.fn()
       .mockResolvedValueOnce({
         ok: true,
         json: async () => [firstResource],
       })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockVersion,
-      })
     )
     const result = await searchSpiget('EssentialsX', '1.21.4', 'paper')
-    expect(result!.name).toBe('EssentialsXtra')
+    expect(result).toBeNull()
+    expect(fetch).toHaveBeenCalledOnce()
   })
 
   it('returns abandoned status when plugin not updated in 18+ months', async () => {

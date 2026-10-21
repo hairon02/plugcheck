@@ -1,5 +1,6 @@
 import { getCached, setCached } from "@/lib/cache";
 import type { Platform, PluginResult } from "@/types/index";
+import { isExactProjectMatch } from "./name-matching";
 
 const HANGAR_BASE = "https://hangar.papermc.io/api/v1";
 const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
@@ -31,7 +32,7 @@ export async function searchHangar(
   const hangarPlatform = PLATFORM_MAP[platform];
   if (!hangarPlatform) return null;
 
-  const cacheKey = `plugcheck:v1:hangar:${pluginName.toLowerCase()}:${mcVersion}:${platform}`;
+  const cacheKey = `plugcheck:v2:hangar:${pluginName.toLowerCase()}:${mcVersion}:${platform}`;
   const cached = await getCached<PluginResult>(cacheKey);
   if (cached) return cached;
 
@@ -46,9 +47,12 @@ export async function searchHangar(
       await searchRes.json();
     if (!projects || projects.length === 0) return null;
 
-    const project =
-      projects.find((p) => p.name.toLowerCase() === pluginName.toLowerCase()) ??
-      projects[0];
+    // Search APIs return fuzzy results. Never report the first partial match as
+    // the uploaded plugin; that can produce a confident but unrelated result.
+    const project = projects.find((p) =>
+      isExactProjectMatch(pluginName, p.name, p.namespace.slug)
+    );
+    if (!project) return null;
 
     const { owner, slug } = project.namespace;
     const projectUrl = `https://hangar.papermc.io/${owner}/${slug}`;
@@ -60,7 +64,7 @@ export async function searchHangar(
 
     if (!versionsRes.ok) {
       const result: PluginResult = {
-        name: project.name,
+        name: pluginName,
         status: "incompatible",
         latestVersion: null,
         supportedVersions: [],
@@ -80,7 +84,7 @@ export async function searchHangar(
     const isCompatible = versions && versions.length > 0;
 
     const result: PluginResult = {
-      name: project.name,
+      name: pluginName,
       status: isCompatible ? "compatible" : "incompatible",
       latestVersion: isCompatible ? versions[0].name : null,
       supportedVersions: isCompatible

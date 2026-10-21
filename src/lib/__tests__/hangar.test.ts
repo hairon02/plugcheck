@@ -76,7 +76,7 @@ describe('searchHangar', () => {
     expect(result!.name).toBe('EssentialsX')
   })
 
-  it('falls back to first result if no exact match', async () => {
+  it('rejects partial matches instead of identifying another project', async () => {
     const firstProject = {
       name: 'EssentialsXtra',
       namespace: { owner: 'Other', slug: 'other' },
@@ -87,13 +87,10 @@ describe('searchHangar', () => {
         ok: true,
         json: async () => ({ result: [firstProject] }),
       })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ result: [mockVersion] }),
-      })
     )
     const result = await searchHangar('EssentialsX', '1.21.4', 'paper')
-    expect(result!.name).toBe('EssentialsXtra')
+    expect(result).toBeNull()
+    expect(fetch).toHaveBeenCalledOnce()
   })
 
   it('returns incompatible when versions endpoint fails', async () => {

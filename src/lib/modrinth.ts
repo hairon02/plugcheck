@@ -1,6 +1,7 @@
 import { getCached, setCached } from "@/lib/cache";
 import staticVersions from "@/data/mc-versions.json";
 import type { PluginResult } from "@/types";
+import { isExactProjectMatch } from "./name-matching";
 
 const MODRINTH_BASE = "https://api.modrinth.com/v2";
 const HEADERS = { "User-Agent": "PlugCheck/1.0 (plugcheck.dev)" };
@@ -62,7 +63,7 @@ export async function searchProject(
   mcVersion: string,
   loaders: string[],
 ): Promise<ModrinthSearchHit[]> {
-  const cacheKey = `plugcheck:v1:search:${name.toLowerCase()}:${mcVersion}:${[...loaders].sort().join(",")}`;
+  const cacheKey = `plugcheck:v2:search:${name.toLowerCase()}:${mcVersion}:${[...loaders].sort().join(",")}`;
   const cached = await getCached<ModrinthSearchHit[]>(cacheKey);
   if (cached) return cached;
 
@@ -95,10 +96,14 @@ export async function searchModrinth(
 ): Promise<PluginResult | null> {
   const loaders = PLATFORM_LOADERS[platform] ?? ["paper", "bukkit"];
   const hits = await searchProject(name, mcVersion, loaders);
-  if (!hits.length) return null;
-  const hit = hits[0];
+  // Modrinth titles sometimes include descriptive taglines. The slug can still
+  // identify the project exactly, but unrelated fuzzy hits must be rejected.
+  const hit = hits.find((candidate) =>
+    isExactProjectMatch(name, candidate.title, candidate.slug)
+  );
+  if (!hit) return null;
   return {
-    name: hit.title,
+    name,
     status: hit.versions.includes(mcVersion) ? "compatible" : "incompatible",
     latestVersion: hit.versions[0] ?? null,
     supportedVersions: hit.versions,

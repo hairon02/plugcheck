@@ -3,17 +3,17 @@ import { z } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
 import { resolvePlugin } from "@/lib/aggregator";
 import { detectConflicts } from "@/lib/conflict-detector";
-import { getCached, setCached, buildCacheKey, redis } from "@/lib/cache";
+import { getCached, setCached, buildCacheKey, isRedisConfigured, redis } from "@/lib/cache";
 import type { PluginResult, CheckResponse, Platform } from "@/types";
 
 export const runtime = "nodejs";
 
 // 10 requests per IP per minute — prevents abuse without blocking legitimate users
-const ratelimit = new Ratelimit({
+const ratelimit = isRedisConfigured ? new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(10, "1 m"),
   analytics: false,
-});
+}) : null;
 
 const PluginInputSchema = z.object({
   name: z.string().min(1).max(100),
@@ -38,13 +38,15 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-real-ip")?.trim() ??
     req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ??
     "anonymous";
-  const { success } = await ratelimit.limit(ip);
-  if (!success) {
-    return errorJson(
-      "RATE_LIMITED",
-      "Too many requests. Please wait a minute.",
-      429,
-    );
+  if (ratelimit) {
+    const { success } = await ratelimit.limit(ip);
+    if (!success) {
+      return errorJson(
+        "RATE_LIMITED",
+        "Too many requests. Please wait a minute.",
+        429,
+      );
+    }
   }
 
   let body: unknown;
