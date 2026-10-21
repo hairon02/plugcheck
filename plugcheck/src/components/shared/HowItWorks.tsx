@@ -3,19 +3,19 @@ const STEPS = [
     icon: '📦',
     title: 'Upload or type',
     description:
-      'Drop your .jar files or paste plugin names. JAR files are read entirely in your browser — nothing is uploaded to a server.',
+      'Drop your .jar files or type plugin names. Everything runs in your browser. Your files never leave your machine.',
   },
   {
     icon: '🔍',
     title: 'We check the sources',
     description:
-      'PlugCheck queries Hangar, SpigotMC, and Modrinth in parallel to find compatibility data for your target Minecraft version.',
+      'PlugCheck checks Hangar, SpigotMC, and Modrinth all at once to see what versions each plugin actually supports.',
   },
   {
     icon: '📊',
     title: 'Get your report',
     description:
-      'Seconds later, see which plugins are compatible, incompatible, or abandoned — plus detected conflicts between them.',
+      "Within seconds you'll see what works, what doesn't, and which plugins have been abandoned. Known conflicts show up too.",
   },
 ]
 
